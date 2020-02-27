@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - 1585Node
+  - 1615Node
+  - 1626Node
+  - 1665Node
+  - 1931Node
   layers:
   - Default
   - TransparentFX
