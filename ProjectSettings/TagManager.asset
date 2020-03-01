@@ -9,6 +9,7 @@ TagManager:
   - 1626Node
   - 1665Node
   - 1931Node
+  - Init
   layers:
   - Default
   - TransparentFX

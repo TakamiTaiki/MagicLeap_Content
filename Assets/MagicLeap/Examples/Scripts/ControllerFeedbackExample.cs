@@ -39,6 +39,7 @@ namespace MagicLeap
         private const int MIN_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock12);
         private const int MAX_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock6And12);
         private const int LED_INDEX_DELTA = MAX_LED_INDEX - MIN_LED_INDEX;
+        private UIManager uIManager;
         #endregion
 
         #region Unity Methods
@@ -52,6 +53,7 @@ namespace MagicLeap
             MLInput.OnControllerButtonUp += HandleOnButtonUp;
             MLInput.OnControllerButtonDown += HandleOnButtonDown;
             MLInput.OnTriggerDown += HandleOnTriggerDown;
+            uIManager = FindObjectOfType<UIManager>();
         }
 
         /// <summary>
@@ -129,6 +131,7 @@ namespace MagicLeap
             {
                 // Demonstrate haptics using callbacks.
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.Medium);
+                uIManager.MLPJInit();
             }
         }
 
@@ -160,6 +163,7 @@ namespace MagicLeap
             {
                 MLInputControllerFeedbackIntensity intensity = (MLInputControllerFeedbackIntensity)((int)(value * 2.0f));
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.Buzz, intensity);
+                uIManager.ChangeMLCtrl();
             }
         }
         #endregion
