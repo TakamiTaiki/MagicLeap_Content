@@ -1645,7 +1645,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1629059991583418, guid: 4ea86ee08cce4cf4ab1eddae39dd64ef, type: 3}
       propertyPath: m_Name
-      value: ExclTiltedBloom
+      value: InitObj
       objectReference: {fileID: 0}
     - target: {fileID: 1629059991583418, guid: 4ea86ee08cce4cf4ab1eddae39dd64ef, type: 3}
       propertyPath: m_TagString
@@ -1657,7 +1657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4312103111950872, guid: 4ea86ee08cce4cf4ab1eddae39dd64ef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.1827
+      value: -0.324
       objectReference: {fileID: 0}
     - target: {fileID: 4312103111950872, guid: 4ea86ee08cce4cf4ab1eddae39dd64ef, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2004,7 +2004,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403379352}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.235, y: -0.182, z: 0.538}
+  m_LocalPosition: {x: -0.832, y: -0.182, z: 0.538}
   m_LocalScale: {x: 0.14232, y: 0.14232, z: 0.14232}
   m_Children:
   - {fileID: 1413907349}
@@ -2642,7 +2642,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 500686477}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.045427, y: -0.117, z: 0.3355}
+  m_LocalPosition: {x: -0.045427, y: -0.2583, z: 0.3355}
   m_LocalScale: {x: 0.32899183, y: 0.32899183, z: 0.32899183}
   m_Children:
   - {fileID: 316276632}
@@ -3715,7 +3715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 425752, guid: e05c716fb25e1d044bf09cab1d86a74e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.875
+      value: 1.247
       objectReference: {fileID: 0}
     - target: {fileID: 425752, guid: e05c716fb25e1d044bf09cab1d86a74e, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4114,7 +4114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 27.447, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.191}
+  m_AnchoredPosition: {x: 0, y: -0.3323}
   m_SizeDelta: {x: 1069, y: 911}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1245863210
