@@ -10,6 +10,10 @@ TagManager:
   - 1665Node
   - 1931Node
   - Init
+  - NextWaitNode
+  - FreeChoiceNode
+  - ActiveNode
+  - InActiveNode
   layers:
   - Default
   - TransparentFX

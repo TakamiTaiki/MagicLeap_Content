@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject nodeIndicater;
 
-    [SerializeField] GameObject selectGlow;
+    [SerializeField] GameObject nodeSelectEffect;
 
     [SerializeField] GameObject[] targets;
 
@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
         dissolvePanel.localPosition = new Vector3(-1f, -0.182f, 0.538f);
         PanelInit();
         DissolveStage++;
-        selectGlow.SetActive(false);
+        nodeSelectEffect.SetActive(false);
         nodeIndicater.SetActive(true);
         explainText.gameObject.SetActive(false);
         fire.SetActive(false);
@@ -100,20 +100,26 @@ public class UIManager : MonoBehaviour
             case State.move:
                 break;
             case State.stop:
+                //説明書きをアクティブ化
                 explainText.gameObject.SetActive(true);
+                //説明の赤印の回転
                 indicater.Rotate(new Vector3(2f, 0, 0));
                 break;
             case State.free:
+                //説明書きをアクティブ化
                 explainText.gameObject.SetActive(true);
+                //説明の赤印の回転
                 indicater.Rotate(new Vector3(2f, 0, 0));
+
+                //フリー選択ときのコントローラのレイ
                 Ray ray = new Ray(root.position, root.forward);
                 RaycastHit hitInfo;
                 if (Physics.Raycast(ray, out hitInfo, distance))
                 {
-                    selectGlow.transform.position = hitInfo.collider.gameObject.transform.position;
+                    nodeSelectEffect.transform.position = hitInfo.collider.gameObject.transform.position;
                     if (tmp != hitInfo.collider.gameObject.tag)
                     {
-                        selectGlow.GetComponent<Renderer>().material.color = Color.white;
+                        nodeSelectEffect.GetComponent<Renderer>().material.color = Color.white;
                         audio_SE.PlayOneShot(preselect);
                     }
                         
@@ -143,7 +149,7 @@ public class UIManager : MonoBehaviour
         if (DissolveStage == nodes.Length)
         {
             state = State.free;
-            selectGlow.SetActive(true);
+            nodeSelectEffect.SetActive(true);
             nodeIndicater.SetActive(false);
             //PanelInit();
         }
@@ -225,7 +231,7 @@ public class UIManager : MonoBehaviour
 
             if (state == State.free)
             {
-                selectGlow.GetComponent<Renderer>().material.color = Color.green;
+                nodeSelectEffect.GetComponent<Renderer>().material.color = Color.green;
 
                 switch (tag)
                 {

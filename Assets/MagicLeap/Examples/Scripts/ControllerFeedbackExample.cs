@@ -39,6 +39,7 @@ namespace MagicLeap
         private const int MIN_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock12);
         private const int MAX_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock6And12);
         private const int LED_INDEX_DELTA = MAX_LED_INDEX - MIN_LED_INDEX;
+        private MainManager mainManager;
         private UIManager uIManager;
         #endregion
 
@@ -53,6 +54,7 @@ namespace MagicLeap
             MLInput.OnControllerButtonUp += HandleOnButtonUp;
             MLInput.OnControllerButtonDown += HandleOnButtonDown;
             MLInput.OnTriggerDown += HandleOnTriggerDown;
+            mainManager = FindObjectOfType<MainManager>();
             uIManager = FindObjectOfType<UIManager>();
         }
 
@@ -163,6 +165,7 @@ namespace MagicLeap
             {
                 MLInputControllerFeedbackIntensity intensity = (MLInputControllerFeedbackIntensity)((int)(value * 2.0f));
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.Buzz, intensity);
+                mainManager.ML_OnTriggerDown();
                 uIManager.ChangeMLCtrl();
             }
         }

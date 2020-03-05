@@ -1,19 +1,19 @@
 using UnityEngine;
 using System.Collections;
 
-public class FlickeringLight : MonoBehaviour {
+public class FlickeringLight : MonoBehaviour
+{
+    public Light fuseLight;
+    private int fuseLightIntensity = 10;
 
-public Light fuseLight;
-private int fuseLightIntensity = 10;
+void Start ()
+    {
+    }
 
-void Start (){
+void Update ()
+    {
+        fuseLightIntensity = (Random.Range (5, 14));
+        fuseLight.intensity = fuseLightIntensity;
 
-}
-
-void Update (){
-
-    fuseLightIntensity = (Random.Range (5, 14));
-    fuseLight.intensity = fuseLightIntensity;
-
-}
+    }
 }
