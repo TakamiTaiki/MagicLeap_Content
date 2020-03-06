@@ -1026,7 +1026,7 @@ PrefabInstance:
     - target: {fileID: 6222050893289323211, guid: 314ceeca1ddd34b4cb6302c283a692e7,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 314ceeca1ddd34b4cb6302c283a692e7, type: 3}
@@ -1124,7 +1124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &219845609
 Transform:
   m_ObjectHideFlags: 0
@@ -1146,25 +1146,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 219845608}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50f6347f491d0dc439712ac61c17f97c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controllerTip: {fileID: 0}
   distance: 10
-  oldNodes: []
   explainText: {fileID: 0}
   indicater: {fileID: 0}
   nodeIndicater: {fileID: 0}
   nodeSelectEffect: {fileID: 0}
-  targets: []
-  fire: {fileID: 0}
   smallTime: 0.2
-  dissolvePanel: {fileID: 0}
-  dissolvePanel_B: {fileID: 0}
-  dissolvePanel_B2: {fileID: 0}
-  dissolvePanel_B3: {fileID: 0}
+  panel_UI: {fileID: 0}
   catle1: {fileID: 0}
   catle2: {fileID: 0}
   catle3: {fileID: 0}
@@ -1176,13 +1170,17 @@ MonoBehaviour:
   audio_Voice: {fileID: 0}
   select: {fileID: 0}
   preselect: {fileID: 0}
-  voices: []
+  initVoice: {fileID: 0}
   nodes:
   - era: 1585
     explain: "\u8C4A\u81E3\u79C0\u983C\u306B\u3088\u308B\u5927\u962A\u57CE\u5929\u5B88\u306E\u5B8C\u6210"
     vc: {fileID: 8300000, guid: 191968a98a6c34244821abe135e5ae4f, type: 3}
     se: {fileID: 8300000, guid: c5ef6f948a1e9354797676b6cec08be6, type: 3}
     transform: {fileID: 1084250990}
+    panel: {fileID: 1787804545}
+    destination: {fileID: 0}
+    assets:
+    - {fileID: 424616187}
     process:
       m_PersistentCalls:
         m_Calls:
@@ -1202,6 +1200,12 @@ MonoBehaviour:
     vc: {fileID: 8300000, guid: 90fb9ffffe9128a4799d4461e460323c, type: 3}
     se: {fileID: 8300000, guid: aa5b31599424a4e4e8db7024f1e6fbcf, type: 3}
     transform: {fileID: 1497272512}
+    panel: {fileID: 426301294}
+    destination: {fileID: 0}
+    assets:
+    - {fileID: 298414941}
+    - {fileID: 357836516}
+    - {fileID: 569650418}
     process:
       m_PersistentCalls:
         m_Calls:
@@ -1221,6 +1225,9 @@ MonoBehaviour:
     vc: {fileID: 8300000, guid: eb8217c8e9da5204681d4da4b0fae0f4, type: 3}
     se: {fileID: 8300000, guid: c5ef6f948a1e9354797676b6cec08be6, type: 3}
     transform: {fileID: 1548493871}
+    panel: {fileID: 421447373}
+    destination: {fileID: 0}
+    assets: []
     process:
       m_PersistentCalls:
         m_Calls:
@@ -1240,6 +1247,11 @@ MonoBehaviour:
     vc: {fileID: 8300000, guid: 6c1756ce0ef1ae7429d4b4413cc401f3, type: 3}
     se: {fileID: 8300000, guid: c3a24450c43cc8544b9637a42caccbf8, type: 3}
     transform: {fileID: 1282666390}
+    panel: {fileID: 0}
+    destination: {fileID: 0}
+    assets:
+    - {fileID: 696173798}
+    - {fileID: 2043791451}
     process:
       m_PersistentCalls:
         m_Calls:
@@ -1259,6 +1271,10 @@ MonoBehaviour:
     vc: {fileID: 8300000, guid: 44491367f44ceeb4ba22af88599a6068, type: 3}
     se: {fileID: 8300000, guid: c5ef6f948a1e9354797676b6cec08be6, type: 3}
     transform: {fileID: 1689842578}
+    panel: {fileID: 421447373}
+    destination: {fileID: 0}
+    assets:
+    - {fileID: 2043791451}
     process:
       m_PersistentCalls:
         m_Calls:
@@ -1273,15 +1289,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  currentNode:
-    era: 0
-    explain: 
-    vc: {fileID: 0}
-    se: {fileID: 0}
-    transform: {fileID: 0}
-    process:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1001 &220751992
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1934,7 +1941,7 @@ GameObject:
   m_Component:
   - component: {fileID: 357836517}
   m_Layer: 0
-  m_Name: CastleA
+  m_Name: Castle_1585ver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1958,7 +1965,7 @@ Transform:
   - {fileID: 2027814424}
   - {fileID: 798838551}
   m_Father: {fileID: 505043220}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &373552135
 GameObject:
@@ -2360,7 +2367,7 @@ GameObject:
   - component: {fileID: 421447375}
   - component: {fileID: 421447374}
   m_Layer: 0
-  m_Name: Plane (2)
+  m_Name: Plane_Restore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2374,8 +2381,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421447372}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.018, y: -0.628, z: 1.568}
-  m_LocalScale: {x: 0.100499965, y: 0.100499965, z: 0.100499965}
+  m_LocalPosition: {x: 0, y: -0.6, z: 1.568}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 505043220}
   m_RootOrder: 8
@@ -2436,7 +2443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 424616188}
   m_Layer: 0
-  m_Name: CastleB
+  m_Name: Castle_Modern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2460,7 +2467,7 @@ Transform:
   - {fileID: 232513794}
   - {fileID: 1491521815}
   m_Father: {fileID: 505043220}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &426301293
 GameObject:
@@ -2474,7 +2481,7 @@ GameObject:
   - component: {fileID: 426301296}
   - component: {fileID: 426301295}
   m_Layer: 0
-  m_Name: Plane (1)
+  m_Name: Plane_Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2488,8 +2495,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426301293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.018, y: -0.643, z: 1.568}
-  m_LocalScale: {x: 0.100499965, y: 0.100499965, z: 0.100499965}
+  m_LocalPosition: {x: 0, y: -0.6, z: 1.568}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 505043220}
   m_RootOrder: 7
@@ -2857,8 +2864,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.15300001, z: -0.143}
   m_LocalScale: {x: 0.90390897, y: 0.90390897, z: 0.90390897}
   m_Children:
-  - {fileID: 357836517}
   - {fileID: 424616188}
+  - {fileID: 357836517}
   - {fileID: 569650419}
   - {fileID: 2043791452}
   - {fileID: 284280716}
@@ -2879,7 +2886,7 @@ GameObject:
   m_Component:
   - component: {fileID: 569650419}
   m_Layer: 0
-  m_Name: CastleC
+  m_Name: Castle_Charred
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3056,6 +3063,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &655982004 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6222050893289323211, guid: 314ceeca1ddd34b4cb6302c283a692e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 132963229}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &696173798 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 135076, guid: e05c716fb25e1d044bf09cab1d86a74e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1063724947}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &702691567
 GameObject:
   m_ObjectHideFlags: 0
@@ -4381,7 +4400,7 @@ MonoBehaviour:
   explainText: {fileID: 70231245}
   indicater: {fileID: 97577861}
   nodeIndicater: {fileID: 1413907350}
-  nodeSelectEffect: {fileID: 0}
+  nodeSelectEffect: {fileID: 655982004}
   targets:
   - {fileID: 747372906}
   - {fileID: 1060651841}
@@ -6601,7 +6620,7 @@ GameObject:
   - component: {fileID: 1787804548}
   - component: {fileID: 1787804547}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Plane_Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6615,8 +6634,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787804544}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.018, y: 0.299, z: 1.568}
-  m_LocalScale: {x: 0.100499965, y: 0.100499965, z: 0.100499965}
+  m_LocalPosition: {x: 0, y: 0.299, z: 1.568}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 505043220}
   m_RootOrder: 6
@@ -7144,7 +7163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2043791452}
   m_Layer: 0
-  m_Name: CastleD
+  m_Name: Castle_1626&1931ver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
