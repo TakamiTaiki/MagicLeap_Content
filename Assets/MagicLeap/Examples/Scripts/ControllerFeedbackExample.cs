@@ -54,8 +54,8 @@ namespace MagicLeap
             MLInput.OnControllerButtonUp += HandleOnButtonUp;
             MLInput.OnControllerButtonDown += HandleOnButtonDown;
             MLInput.OnTriggerDown += HandleOnTriggerDown;
-            //mainManager = FindObjectOfType<MainManager>();
-            uIManager = FindObjectOfType<UIManager>();
+            mainManager = FindObjectOfType<MainManager>();
+            //uIManager = FindObjectOfType<UIManager>();
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace MagicLeap
             {
                 // Demonstrate haptics using callbacks.
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.Medium);
-                uIManager.MLPJInit();
+                //uIManager.MLPJInit();
             }
         }
 
@@ -165,8 +165,8 @@ namespace MagicLeap
             {
                 MLInputControllerFeedbackIntensity intensity = (MLInputControllerFeedbackIntensity)((int)(value * 2.0f));
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.Buzz, intensity);
-                //mainManager.ML_OnTriggerDown();
-                uIManager.ChangeMLCtrl();
+                mainManager.ML_OnTriggerDown();
+                //uIManager.ChangeMLCtrl();
             }
         }
         #endregion

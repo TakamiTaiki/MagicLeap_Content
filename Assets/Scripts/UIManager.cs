@@ -58,8 +58,6 @@ public class UIManager : MonoBehaviour
     }
     private State state = State.move;
 
-    [SerializeField] Renderer nonActive, invisible;
-
     [SerializeField] AudioSource audio_SE;
     [SerializeField] AudioSource audio_Voice;
     [SerializeField] AudioClip select;
@@ -193,10 +191,10 @@ public class UIManager : MonoBehaviour
     IEnumerator BeLightning()
     {
         audio_SE.PlayOneShot(thunder);
-        FindObjectOfType<OrbitalBeamLaser>().AAA();
+        FindObjectOfType<OrbitalBeamLaser>().Start_Thunder();
         yield return new WaitForSeconds(3f);
         catle4.SetActive(false);
-        FindObjectOfType<OrbitalBeamLaser>().BBB();
+        FindObjectOfType<OrbitalBeamLaser>().End_Thunder();
     }
 
 
@@ -239,20 +237,20 @@ public class UIManager : MonoBehaviour
                         StartCoroutine(BePrime());
                         audio_Voice.PlayOneShot(voices[0]);
                         explainText.text = "豊臣秀頼による大阪城天守の完成";
-                            FindObjectOfType<OrbitalBeamLaser>().BBB();
+                            FindObjectOfType<OrbitalBeamLaser>().End_Thunder();
                             break;
                     case "1615Node":
                         audio_Voice.PlayOneShot(voices[1]);
                         StartCoroutine(BeCharred());
                             explainText.text = "大坂夏の陣にて焼失";
                             StartCoroutine(BeCharred());
-                            FindObjectOfType<OrbitalBeamLaser>().BBB();
+                            FindObjectOfType<OrbitalBeamLaser>().End_Thunder();
                             break;
                     case "1626Node":
                         audio_Voice.PlayOneShot(voices[2]);
                         StartCoroutine(Restore());
                             explainText.text = "徳川による大阪城天守の再建";
-                            FindObjectOfType<OrbitalBeamLaser>().BBB();
+                            FindObjectOfType<OrbitalBeamLaser>().End_Thunder();
                             break;
                     case "1665Node":
                         audio_Voice.PlayOneShot(voices[3]);
@@ -266,7 +264,7 @@ public class UIManager : MonoBehaviour
                         catle4.SetActive(true);
                         StartCoroutine(Restore());
                             explainText.text = "3代目天守閣の再建";
-                            FindObjectOfType<OrbitalBeamLaser>().BBB();
+                            FindObjectOfType<OrbitalBeamLaser>().End_Thunder();
                         Invoke("PanelInit", 6f);
                             break;
                     default:
@@ -330,7 +328,7 @@ public class UIManager : MonoBehaviour
                         dissolvePanel_B3.localPosition = new Vector3(-0.018f, -0.628f, 1.568f);
                         catle4.SetActive(true);
                         StartCoroutine(Restore());
-                        FindObjectOfType<OrbitalBeamLaser>().BBB();
+                        FindObjectOfType<OrbitalBeamLaser>().End_Thunder();
                         DissolveStage++;
                         explainText.text = "現在";
                         explainText.gameObject.SetActive(false);

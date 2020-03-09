@@ -133,7 +133,7 @@ Material:
     - _DissolveMap2_Scroll: {r: 0, g: 0, b: 0, a: 0}
     - _DissolveMap3_Scroll: {r: 0, g: 0, b: 0, a: 0}
     - _DissolveMaskNormal: {r: 0, g: 1, b: 0, a: 0}
-    - _DissolveMaskPosition: {r: 0, g: 0.117268756, b: 1.2743292, a: 0}
+    - _DissolveMaskPosition: {r: 0, g: 0.117268786, b: 1.2743293, a: 0}
     - _Dissolve_ObjectWorldPos: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}

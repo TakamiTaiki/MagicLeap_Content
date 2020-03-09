@@ -52,7 +52,7 @@ IEnumerator LaserChargeWait (){
     }
 
 }
-    public void AAA()
+    public void Start_Thunder()
     {
         LaserChargeFlag = 0;
         //LaserChargeAudio.Play();
@@ -60,7 +60,7 @@ IEnumerator LaserChargeWait (){
         StartCoroutine("LaserChargeWait");
     }
 
-    public void BBB()
+    public void End_Thunder()
     {
         LaserChargeFlag = 1;
         LaserEffects.SetActive(false);
