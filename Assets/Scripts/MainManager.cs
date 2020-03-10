@@ -9,6 +9,7 @@ using Utils;
 
 public class MainManager : MonoBehaviour
 {
+    #region フィールド
     StateProcessor stateProcessor = new StateProcessor();
 
     [SerializeField] Transform controllerTip;
@@ -22,6 +23,7 @@ public class MainManager : MonoBehaviour
     [SerializeField] GameObject nodeIndicater;
 
     [SerializeField] GameObject nodeSelectEffect;
+
 
     public float shrinkTime = 0.2f;
     public float smallScale = 0.9f;
@@ -40,7 +42,9 @@ public class MainManager : MonoBehaviour
     private string selectName;
 
     [Header("城")]
-    public GameObject[] catsles;
+    public GameObject[] castles;
+    [Header("板")]
+    public GameObject[] planes;
 
     #region 時代の構造体
     [System.Serializable]
@@ -73,10 +77,15 @@ public class MainManager : MonoBehaviour
 
     private Dictionary<string, int> nodeDictionary = new Dictionary<string, int>();
 
+    private bool isFreeChoice = false;
+
+    #endregion
+
+    /**********************************************************************************/
+
+    #region イニシャライズ
     public void Init()
     {
-        //パネルUIのイニシャライズ
-        PanelInit();
         //ノードが時系列になるようにソート
         Array.Sort(nodes, (a, b) => a.era - b.era);
         //タグと索引の初期化
@@ -86,8 +95,12 @@ public class MainManager : MonoBehaviour
             nodes[i].myIndex = i;
             nodeDictionary[nodes[i].transform.name] = nodes[i].myIndex;
         }
-
         currentNode = nodes[0];
+
+        //パネルUIのイニシャライズ
+        PanelInit();
+        //初期舞台セット
+        Utility.SetStage(currentNode.era, castles, planes);
 
         //ノードインディケーターを初期位置まで移動
         StartCoroutine(ActiveNextNode(currentNode, panel_UI));
@@ -98,6 +111,13 @@ public class MainManager : MonoBehaviour
         nodeIndicater.SetActive(true);
         nodeSelectEffect.SetActive(false);
     }
+    public void PanelInit()
+    {
+        //パネルUIの位置の初期化
+        panel_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
+    }
+    #endregion
+
     void Start()
     {
         Init();
@@ -110,12 +130,13 @@ public class MainManager : MonoBehaviour
         indicater.Rotate(new Vector3(2f, 0, 0));
     }
 
+    #region スタートステート
     public void ST_Start(bool isFirst)
     {
         //初期処理
         if (isFirst)
         {
-
+            isFreeChoice = false;
         }
         //継続処理
         else
@@ -123,7 +144,9 @@ public class MainManager : MonoBehaviour
             stateProcessor.SetState(ST_Play);
         }
     }
+    #endregion
 
+    #region プレイステート
     public void ST_Play(bool isFirst)
     {
         //初期処理
@@ -136,13 +159,15 @@ public class MainManager : MonoBehaviour
         {
         }
     }
+    #endregion
 
+    #region フリーチョイスステート
     public void ST_FreeChoice(bool isFirst)
     {
         //初期処理
         if (isFirst)
         {
-
+            isFreeChoice = true;
         }
         //継続処理
         else
@@ -167,18 +192,16 @@ public class MainManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
     #region 1585年
     public void Event_1585() { StartCoroutine(Process_1585(currentNode)); }
     IEnumerator Process_1585(Node node)
     {
-        catsles[0].SetActive(true);
-        catsles[1].SetActive(true);
-        catsles[2].SetActive(false);
-        catsles[3].SetActive(false);
+        Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
         yield return PanelLiftDown(node, 0.2f);
-        UpdateNode();
+        if (!isFreeChoice) UpdateNode();
     }
     #endregion
 
@@ -186,10 +209,7 @@ public class MainManager : MonoBehaviour
     public void Event_1615() { StartCoroutine(Process_1615(currentNode)); }
     IEnumerator Process_1615(Node node)
     {
-        catsles[0].SetActive(false);
-        catsles[1].SetActive(true);
-        catsles[2].SetActive(true);
-        catsles[3].SetActive(false);
+        Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
         //着火
         node.assets[0].SetActive(true);
@@ -197,9 +217,9 @@ public class MainManager : MonoBehaviour
         //鎮火
         node.assets[0].SetActive(false);
         //城の非アクティブ化
-        catsles[1].SetActive(false);
-        catsles[2].SetActive(false);
-        UpdateNode();
+        castles[1].SetActive(false);
+        castles[2].SetActive(false);
+        if (!isFreeChoice) UpdateNode();
     }
     #endregion
 
@@ -207,13 +227,10 @@ public class MainManager : MonoBehaviour
     public void Event_1626() { StartCoroutine(Process_1626(currentNode)); }
     IEnumerator Process_1626(Node node)
     {
-        catsles[0].SetActive(false);
-        catsles[1].SetActive(false);
-        catsles[2].SetActive(false);
-        catsles[3].SetActive(true);
+        Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
         yield return PanelLiftUp(node, 0.2f);
-        UpdateNode();
+        if (!isFreeChoice) UpdateNode();
     }
     #endregion
 
@@ -221,16 +238,13 @@ public class MainManager : MonoBehaviour
     public void Event_1665() { StartCoroutine(Process_1665(currentNode)); }
     IEnumerator Process_1665(Node node)
     {
-        catsles[0].SetActive(false);
-        catsles[1].SetActive(false);
-        catsles[2].SetActive(false);
-        catsles[3].SetActive(true);
+        Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
         node.assets[0].GetComponent<OrbitalBeamLaser>().Start_Thunder();
         yield return new WaitForSeconds(3f);
         node.assets[0].GetComponent<OrbitalBeamLaser>().End_Thunder();
-        catsles[3].SetActive(false);
-        UpdateNode();
+        castles[3].SetActive(false);
+        if (!isFreeChoice) UpdateNode();
     }
     #endregion
 
@@ -238,18 +252,14 @@ public class MainManager : MonoBehaviour
     public void Event_1931() { StartCoroutine(Process_1931(currentNode)); }
     IEnumerator Process_1931(Node node)
     {
-        //パネルを戻す、お城のアクティブ化
-        node.panel.transform.position = new Vector3(-0.018f, -0.628f, 1.568f);
-        catsles[0].SetActive(false);
-        catsles[1].SetActive(false);
-        catsles[2].SetActive(false);
-        catsles[3].SetActive(true);
+        Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
         yield return PanelLiftUp(node, 0.2f);
-        UpdateNode();
+        if (!isFreeChoice) UpdateNode();
     }
     #endregion
 
+    #region サブルーチン
     IEnumerator PanelLiftUp(Node node, float speed)
     {
         while (node.panel.position.y < node.destination.position.y)
@@ -303,7 +313,9 @@ public class MainManager : MonoBehaviour
         }
         nodeIndicater.transform.localScale = Vector3.one * largeScale_Max;
     }
+    #endregion
 
+    #region コントローラ関連
     /// <summary>
     /// マジックリープのトリガーが引かれた瞬間に処理がされる
     /// </summary>
@@ -348,7 +360,9 @@ public class MainManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region ノードのアップデート関連
     /// <summary>
     /// 連結されているノードに更新する
     /// 最終ノードの場合はデストラクト処理
@@ -382,13 +396,9 @@ public class MainManager : MonoBehaviour
         audio_Voice.PlayOneShot(node.vc);
         explainText.text = node.explain;
     }
+    #endregion
 
-    public void PanelInit()
-    {
-        //パネルUIの位置の初期化
-        panel_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
-    }
-
+    #region その他の関数
     /// <summary>
     /// ストーリーモードからフリーチョイスモードへ
     /// </summary>
@@ -404,4 +414,5 @@ public class MainManager : MonoBehaviour
         for (int i = 0; i < nodes.Length; i++)
             nodes[i].transform.tag = "FreeChoiceNode";
     }
+    #endregion
 }

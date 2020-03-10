@@ -127,9 +127,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1113833994144324, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1364984497300248, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1463616170062846, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
       propertyPath: m_Name
       value: Controller
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766317395184334, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1854827734108154, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1968809443855386, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4724017855786006, guid: 6884f69ad0adbb441905ff499f5d1ece, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1165,14 +1185,20 @@ MonoBehaviour:
   panel_UI: {fileID: 403379353}
   audio_SE: {fileID: 1233595135}
   audio_Voice: {fileID: 887843781}
-  select: {fileID: 0}
+  select: {fileID: 8300000, guid: e27a2f0b039ff4440a49308a16dac592, type: 3}
   preselect: {fileID: 8300000, guid: 150af4447211efc4b84abd72111b5426, type: 3}
-  initVoice: {fileID: 8300000, guid: e27a2f0b039ff4440a49308a16dac592, type: 3}
-  catsles:
+  initVoice: {fileID: 8300000, guid: aa38d878abacb1c4c95eac657967b6d8, type: 3}
+  castles:
   - {fileID: 424616187}
   - {fileID: 357836516}
   - {fileID: 569650418}
   - {fileID: 2043791451}
+  planes:
+  - {fileID: 1787804544}
+  - {fileID: 426301293}
+  - {fileID: 421447372}
+  - {fileID: 1060651841}
+  - {fileID: 756191884}
   nodes:
   - era: 1585
     explain: "\u8C4A\u81E3\u79C0\u983C\u306B\u3088\u308B\u5927\u962A\u57CE\u5929\u5B88\u306E\u5B8C\u6210"
@@ -1181,8 +1207,7 @@ MonoBehaviour:
     transform: {fileID: 1084250990}
     panel: {fileID: 1787804545}
     destination: {fileID: 756191885}
-    assets:
-    - {fileID: 424616187}
+    assets: []
     process:
       m_PersistentCalls:
         m_Calls:
@@ -2379,7 +2404,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421447372}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.32300007, z: -0.0039999485}
+  m_LocalPosition: {x: 0, y: -0.356, z: -0.0039999485}
   m_LocalScale: {x: 0.10000001, y: 0.10000001, z: 0.10000001}
   m_Children: []
   m_Father: {fileID: 1166320805}
@@ -2493,7 +2518,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426301293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.32300007, z: -0.0039999485}
+  m_LocalPosition: {x: 0, y: -0.322, z: -0.0039999485}
   m_LocalScale: {x: 0.10000001, y: 0.10000001, z: 0.10000001}
   m_Children: []
   m_Father: {fileID: 1166320805}
@@ -6693,7 +6718,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787804544}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.57600003, z: -0.0039999485}
+  m_LocalPosition: {x: 0, y: 0.627, z: -0.0039999485}
   m_LocalScale: {x: 0.10000001, y: 0.10000001, z: 0.10000001}
   m_Children: []
   m_Father: {fileID: 1166320805}
