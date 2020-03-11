@@ -31,7 +31,7 @@ public class MainManager : MonoBehaviour
     public float largeScale_Max = 1.5f;
     public float panelSpeed = 0.07f;
 
-    [SerializeField] Transform panel_UI;
+    [SerializeField] Transform plane_UI;
 
     [SerializeField] AudioSource audio_SE;
     [SerializeField] AudioSource audio_Voice;
@@ -45,6 +45,10 @@ public class MainManager : MonoBehaviour
     public GameObject[] castles;
     [Header("板")]
     public GameObject[] planes;
+    public Material nodeInactiveMaterial, nodeActiveMaterial;
+
+    [SerializeField] Animator startAnimator, rebootAnimator;
+    [SerializeField] GameObject startButton;
 
     #region 時代の構造体
     [System.Serializable]
@@ -79,6 +83,7 @@ public class MainManager : MonoBehaviour
 
     private bool isFreeChoice = false;
 
+
     #endregion
 
     /**********************************************************************************/
@@ -91,9 +96,10 @@ public class MainManager : MonoBehaviour
         //タグと索引の初期化
         for (int i = 0; i < nodes.Length; i++)
         {
-            nodes[i].transform.tag = i == 0 ? "NextWaitNode" : "InActiveNode";
+            nodes[i].transform.tag = "InActiveNode";
             nodes[i].myIndex = i;
             nodeDictionary[nodes[i].transform.name] = nodes[i].myIndex;
+            nodes[i].transform.gameObject.GetComponent<Renderer>().material = nodeInactiveMaterial;
         }
         currentNode = nodes[0];
 
@@ -102,19 +108,17 @@ public class MainManager : MonoBehaviour
         //初期舞台セット
         Utility.SetStage(currentNode.era, castles, planes);
 
-        //ノードインディケーターを初期位置まで移動
-        StartCoroutine(ActiveNextNode(currentNode, panel_UI));
-
+        startButton.SetActive(true);
         //初期コンテンツを開始
         stateProcessor.SetState(ST_Start);
 
-        nodeIndicater.SetActive(true);
+        nodeIndicater.SetActive(false);
         nodeSelectEffect.SetActive(false);
     }
     public void PanelInit()
     {
         //パネルUIの位置の初期化
-        panel_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
+        plane_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
     }
     #endregion
 
@@ -141,7 +145,6 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
-            stateProcessor.SetState(ST_Play);
         }
     }
     #endregion
@@ -182,12 +185,12 @@ public class MainManager : MonoBehaviour
                 if (tag == "FreeChoiceNode")
                 {
                     Utility.Alignment(nodeSelectEffect, hitInfo.collider.gameObject);
-                    if (selectName != hitInfo.collider.gameObject.tag)
+                    if (selectName != hitInfo.collider.gameObject.name)
                     {
                         Utility.ChangeObjColor(nodeSelectEffect, Color.white);
                         audio_SE.PlayOneShot(preselect);
                     }
-                    selectName = hitInfo.collider.gameObject.tag;
+                    selectName = hitInfo.collider.gameObject.name;
                 }
             }
         }
@@ -278,16 +281,20 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    IEnumerator ActiveNextNode(Node node, Transform panel)
+    IEnumerator ActiveNextNode(Node preNode, Node node, Transform panel)
     {
         //ノードインディケーターを縮小化
         yield return Shrink(shrinkTime);
+        int i = 0;
         //移動
         while (panel.position.x < node.transform.position.x)
         {
             var pos = panel.position;
             pos.x += Time.deltaTime * panelSpeed;
             panel.position = pos;
+            if (i++ == 30 && preNode.era != node.era)
+                preNode.transform.gameObject.GetComponent<Renderer>().material = nodeActiveMaterial;
+
             yield return null;
         }
         //拡大化
@@ -312,6 +319,24 @@ public class MainManager : MonoBehaviour
             yield return null;
         }
         nodeIndicater.transform.localScale = Vector3.one * largeScale_Max;
+    }
+
+    IEnumerator OnButton(Transform button, Transform plane)
+    {
+        float distance = Vector3.Distance(button.position, plane.position);
+        Vector3 vec = (plane.position - button.position).normalized;
+        while (Vector3.Distance(button.position, plane.position) > 0.01f)
+        {
+            button.position += vec * Time.deltaTime;
+            yield return null;
+        }
+
+        while (Vector3.Distance(button.position, plane.position) < distance)
+        {
+            button.position -= vec * Time.deltaTime;
+            yield return null;
+        }
+
     }
     #endregion
 
@@ -356,7 +381,18 @@ public class MainManager : MonoBehaviour
             else if (tag == "Init")
             {
                 audio_Voice.PlayOneShot(initVoice);
+                rebootAnimator.SetTrigger("Reboot");
                 Init();
+            }
+            else if (tag == "Start")
+            {
+                startAnimator.SetTrigger("Start");
+                Invoke("InvisibleButton", 2);
+                nodeIndicater.SetActive(true);
+                //ノードインディケーターを初期位置まで移動
+                StartCoroutine(ActiveNextNode(nodes[0], nodes[0], plane_UI));
+                nodes[0].transform.tag = "NextWaitNode";
+                stateProcessor.SetState(ST_Play);
             }
         }
     }
@@ -372,16 +408,18 @@ public class MainManager : MonoBehaviour
         int nextIndex = currentNode.myIndex + 1;
         if (nextIndex < nodes.Length)
         {
+            Node preNode = currentNode;
             currentNode = nodes[nextIndex];
             currentNode.transform.tag = "NextWaitNode";
             //ノードインディケーターの移動
-            StartCoroutine(ActiveNextNode(currentNode, panel_UI));
+            StartCoroutine(ActiveNextNode(preNode, currentNode, plane_UI));
         }
         //最後のノードのイベントが終わったときはフリー選択モードとなる
         else
         {
             //パネルずらし
-            panel_UI.Translate(new Vector3(1f, 0, 0));
+            plane_UI.localPosition += new Vector3(1f, 0, 0);
+            currentNode.transform.gameObject.GetComponent<Renderer>().material = nodeActiveMaterial;
             FreeChoiceAvtivate();
         }
     }
@@ -413,6 +451,11 @@ public class MainManager : MonoBehaviour
         //タグを変える
         for (int i = 0; i < nodes.Length; i++)
             nodes[i].transform.tag = "FreeChoiceNode";
+    }
+
+    public void InvisibleButton()
+    {
+        startButton.SetActive(false);
     }
     #endregion
 }
