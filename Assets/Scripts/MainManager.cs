@@ -24,14 +24,23 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] GameObject nodeSelectEffect;
 
+    [SerializeField] GameObject _3dStartButton;
+    [SerializeField] GameObject _3dRebootButton;
+
+    [SerializeField] GameObject decideEffect;
+
+    private GameObject freeChoiceTargetNode;
+
 
     public float shrinkTime = 0.2f;
     public float smallScale = 0.9f;
     public float largeScale = 1.2f;
+    public float shrinkScale_Min = 0.23f;
     public float largeScale_Max = 1.5f;
     public float panelSpeed = 0.07f;
 
     [SerializeField] Transform plane_UI;
+    [SerializeField] Transform planeStart;
 
     [SerializeField] AudioSource audio_SE;
     [SerializeField] AudioSource audio_Voice;
@@ -39,16 +48,11 @@ public class MainManager : MonoBehaviour
     [SerializeField] AudioClip preselect;
     [SerializeField] AudioClip initVoice;
 
-    private string selectName;
-
     [Header("城")]
     public GameObject[] castles;
     [Header("板")]
     public GameObject[] planes;
     public Material nodeInactiveMaterial, nodeActiveMaterial;
-
-    [SerializeField] Animator startAnimator, rebootAnimator;
-    [SerializeField] GameObject startButton;
 
     #region 時代の構造体
     [System.Serializable]
@@ -108,7 +112,7 @@ public class MainManager : MonoBehaviour
         //初期舞台セット
         Utility.SetStage(currentNode.era, castles, planes);
 
-        startButton.SetActive(true);
+        _3dStartButton.SetActive(true);
         //初期コンテンツを開始
         stateProcessor.SetState(ST_Start);
 
@@ -118,7 +122,8 @@ public class MainManager : MonoBehaviour
     public void PanelInit()
     {
         //パネルUIの位置の初期化
-        plane_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
+        //plane_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
+        Utility.Alignment(plane_UI, planeStart);
     }
     #endregion
 
@@ -175,6 +180,7 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
+            Utility.Alignment(nodeSelectEffect, freeChoiceTargetNode);
             //Rayはコントローラの先端から照射
             Ray ray = new Ray(controllerTip.position, controllerTip.forward);
             RaycastHit hitInfo;
@@ -184,13 +190,12 @@ public class MainManager : MonoBehaviour
 
                 if (tag == "FreeChoiceNode")
                 {
-                    Utility.Alignment(nodeSelectEffect, hitInfo.collider.gameObject);
-                    if (selectName != hitInfo.collider.gameObject.name)
+                    if (freeChoiceTargetNode.name != hitInfo.collider.gameObject.name)
                     {
+                        freeChoiceTargetNode = hitInfo.collider.gameObject;
                         Utility.ChangeObjColor(nodeSelectEffect, Color.white);
                         audio_SE.PlayOneShot(preselect);
                     }
-                    selectName = hitInfo.collider.gameObject.name;
                 }
             }
         }
@@ -268,6 +273,7 @@ public class MainManager : MonoBehaviour
         while (node.panel.position.y < node.destination.position.y)
         {
             node.panel.position += new Vector3(0, Time.deltaTime * speed, 0);
+            //node.panel.position = Vector3.SlerpUnclamped(node.panel.position, node.destination.position, speed);
             yield return null;
         }
     }
@@ -277,6 +283,7 @@ public class MainManager : MonoBehaviour
         while (node.panel.position.y > node.destination.position.y)
         {
             node.panel.position -= new Vector3(0, Time.deltaTime * speed, 0);
+            //node.panel.position = Vector3.SlerpUnclamped(node.panel.position, node.destination.position, speed);
             yield return null;
         }
     }
@@ -284,31 +291,33 @@ public class MainManager : MonoBehaviour
     IEnumerator ActiveNextNode(Node preNode, Node node, Transform panel)
     {
         //ノードインディケーターを縮小化
-        yield return Shrink(shrinkTime);
-        int i = 0;
+        yield return Shrink();
+        //ノードの色を青くする
+        if (preNode.era != node.era)
+            preNode.transform.gameObject.GetComponent<Renderer>().material = nodeActiveMaterial;
         //移動
-        while (panel.position.x < node.transform.position.x)
+        while (Vector3.Distance(panel.position, node.transform.position) > 0.007f)
         {
+            //panel.position = Vector3.SlerpUnclamped(panel.position, node.transform.position, Time.deltaTime * panelSpeed);
+            Vector3 vec = (node.transform.position - panel.position).normalized;
             var pos = panel.position;
-            pos.x += Time.deltaTime * panelSpeed;
+            pos += vec * Time.deltaTime * panelSpeed;
             panel.position = pos;
-            if (i++ == 30 && preNode.era != node.era)
-                preNode.transform.gameObject.GetComponent<Renderer>().material = nodeActiveMaterial;
-
             yield return null;
         }
+        Utility.Alignment(panel, node.transform);
         //拡大化
         yield return EnLarge();
     }
 
-    IEnumerator Shrink(float interval)
+    IEnumerator Shrink()
     {
-        float startTime = Time.realtimeSinceStartup;
-        while (startTime + interval > Time.realtimeSinceStartup)
+        while (nodeIndicater.transform.localScale.x > shrinkScale_Min)
         {
             nodeIndicater.transform.localScale *= smallScale;
             yield return null;
         }
+        nodeIndicater.transform.localScale = Vector3.one * shrinkScale_Min;
     }
 
     IEnumerator EnLarge()
@@ -321,21 +330,17 @@ public class MainManager : MonoBehaviour
         nodeIndicater.transform.localScale = Vector3.one * largeScale_Max;
     }
 
-    IEnumerator OnButton(Transform button, Transform plane)
+    IEnumerator DecideEffectGo(Node node)
     {
-        float distance = Vector3.Distance(button.position, plane.position);
-        Vector3 vec = (plane.position - button.position).normalized;
-        while (Vector3.Distance(button.position, plane.position) > 0.01f)
+        Utility.Alignment(decideEffect.transform, node.transform);
+        decideEffect.SetActive(true);
+        while (decideEffect.transform.localScale.x < 2f)
         {
-            button.position += vec * Time.deltaTime;
+            decideEffect.transform.localScale *= 1.1f;
             yield return null;
         }
-
-        while (Vector3.Distance(button.position, plane.position) < distance)
-        {
-            button.position -= vec * Time.deltaTime;
-            yield return null;
-        }
+        decideEffect.SetActive(false);
+        decideEffect.transform.localScale = Vector3.one * 0.02f;
 
     }
     #endregion
@@ -359,6 +364,7 @@ public class MainManager : MonoBehaviour
                 currentNode.process.Invoke();
                 //ノードを変えることによる選択できないようにする
                 currentNode.transform.tag = "ActiveNode";
+                StartCoroutine(DecideEffectGo(currentNode));
             }
             else if (tag == "ActiveNode")
             {
@@ -380,14 +386,15 @@ public class MainManager : MonoBehaviour
             }
             else if (tag == "Init")
             {
+                Utility.ChangeObjColor(_3dRebootButton, Color.green);
+                Invoke("InitRebootButtonColor", 1);
                 audio_Voice.PlayOneShot(initVoice);
-                rebootAnimator.SetTrigger("Reboot");
                 Init();
             }
             else if (tag == "Start")
             {
-                startAnimator.SetTrigger("Start");
-                Invoke("InvisibleButton", 2);
+                Utility.ChangeObjColor(_3dStartButton, Color.green);
+                Invoke("InvisibleButton", 1);
                 nodeIndicater.SetActive(true);
                 //ノードインディケーターを初期位置まで移動
                 StartCoroutine(ActiveNextNode(nodes[0], nodes[0], plane_UI));
@@ -442,6 +449,7 @@ public class MainManager : MonoBehaviour
     /// </summary>
     public void FreeChoiceAvtivate()
     {
+        freeChoiceTargetNode = currentNode.transform.gameObject;
         //セレクトエフェクトのアクティブ化
         nodeSelectEffect.SetActive(true);
         //インディケーターは非アクティブ化
@@ -455,7 +463,13 @@ public class MainManager : MonoBehaviour
 
     public void InvisibleButton()
     {
-        startButton.SetActive(false);
+        Utility.ChangeObjColor(_3dStartButton, Color.white);
+        _3dStartButton.SetActive(false);
+    }
+
+    public void InitRebootButtonColor()
+    {
+        Utility.ChangeObjColor(_3dRebootButton, Color.white);
     }
     #endregion
 }

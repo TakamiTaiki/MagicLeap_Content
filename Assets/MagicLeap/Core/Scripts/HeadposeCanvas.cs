@@ -33,6 +33,12 @@ namespace UnityEngine.XR.MagicLeap
 
         [Tooltip("The speed at which this object changes its rotation.")]
         public float RotationLerpSpeed = 5f;
+
+        public GameObject center;
+
+        public float minY;
+        public float maxY = -0.55f;
+        public float distance;
         #endregion
 
         #region Private Varibles
@@ -76,6 +82,18 @@ namespace UnityEngine.XR.MagicLeap
             // Move the object CanvasDistance units in front of the camera.
             float posSpeed = Time.deltaTime * PositionLerpSpeed;
             Vector3 posTo = _camera.transform.position + (_camera.transform.forward * CanvasDistanceForwards) + (_camera.transform.up * CanvasDistanceUpwards);
+            //if (Vector3.Distance(center.transform.position, posTo) < distance)
+            //{
+            //    posTo = new Vector3(transform.position.x, posTo.y, transform.position.z);
+            //}
+            if (posTo.y > maxY)
+            {
+                posTo = new Vector3(posTo.x, maxY, posTo.z);
+            }
+            else if (posTo.y < minY)
+            {
+                posTo = new Vector3(posTo.x, minY, posTo.z);
+            }
             transform.position = Vector3.SlerpUnclamped(transform.position, posTo, posSpeed);
 
             // Rotate the object to face the camera.
