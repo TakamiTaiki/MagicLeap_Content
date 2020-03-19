@@ -360,6 +360,8 @@ public class MainManager : MonoBehaviour
 
             if (tag == "NextWaitNode")
             {
+                //決定のSEを流す
+                audio_SE.PlayOneShot(select);
                 //各ノードに割り振られた処理を開始
                 currentNode.process.Invoke();
                 //ノードを変えることによる選択できないようにする
@@ -386,6 +388,8 @@ public class MainManager : MonoBehaviour
             }
             else if (tag == "Init")
             {
+                //決定のSEを流す
+                audio_SE.PlayOneShot(select);
                 Utility.ChangeObjColor(_3dRebootButton, Color.green);
                 Invoke("InitRebootButtonColor", 1);
                 audio_Voice.PlayOneShot(initVoice);
@@ -393,6 +397,8 @@ public class MainManager : MonoBehaviour
             }
             else if (tag == "Start")
             {
+                //決定のSEを流す
+                audio_SE.PlayOneShot(select);
                 Utility.ChangeObjColor(_3dStartButton, Color.green);
                 Invoke("InvisibleButton", 1);
                 nodeIndicater.SetActive(true);
