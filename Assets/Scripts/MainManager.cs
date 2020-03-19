@@ -29,6 +29,7 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] GameObject decideEffect;
 
+    private GameObject decideEffectTargetNode;
     private GameObject freeChoiceTargetNode;
 
 
@@ -87,6 +88,8 @@ public class MainManager : MonoBehaviour
 
     private bool isFreeChoice = false;
 
+    [SerializeField] Text[] eraTexts;
+
 
     #endregion
 
@@ -104,6 +107,8 @@ public class MainManager : MonoBehaviour
             nodes[i].myIndex = i;
             nodeDictionary[nodes[i].transform.name] = nodes[i].myIndex;
             nodes[i].transform.gameObject.GetComponent<Renderer>().material = nodeInactiveMaterial;
+            eraTexts[i].transform.Rotate(90, 0, 0);
+            eraTexts[i].color = new Color(255f, 255f, 255f, 0);
         }
         currentNode = nodes[0];
 
@@ -112,12 +117,14 @@ public class MainManager : MonoBehaviour
         //初期舞台セット
         Utility.SetStage(currentNode.era, castles, planes);
 
+        explainText.text = "";
+        indicater.gameObject.SetActive(false);
         _3dStartButton.SetActive(true);
-        //初期コンテンツを開始
-        stateProcessor.SetState(ST_Start);
-
+        //_3dRebootButton.SetActive(false);
         nodeIndicater.SetActive(false);
         nodeSelectEffect.SetActive(false);
+        //初期コンテンツを開始
+        stateProcessor.SetState(ST_Start);
     }
     public void PanelInit()
     {
@@ -150,6 +157,7 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
+            stateProcessor.SetState(ST_Play);
         }
     }
     #endregion
@@ -165,6 +173,7 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
+            Utility.Alignment(decideEffect, decideEffectTargetNode);
         }
     }
     #endregion
@@ -195,6 +204,7 @@ public class MainManager : MonoBehaviour
                         freeChoiceTargetNode = hitInfo.collider.gameObject;
                         Utility.ChangeObjColor(nodeSelectEffect, Color.white);
                         audio_SE.PlayOneShot(preselect);
+                        explainText.text = nodes[nodeDictionary[freeChoiceTargetNode.name]].explain;
                     }
                 }
             }
@@ -307,7 +317,7 @@ public class MainManager : MonoBehaviour
         }
         Utility.Alignment(panel, node.transform);
         //拡大化
-        yield return EnLarge();
+        yield return EnLarge(node);
     }
 
     IEnumerator Shrink()
@@ -320,11 +330,15 @@ public class MainManager : MonoBehaviour
         nodeIndicater.transform.localScale = Vector3.one * shrinkScale_Min;
     }
 
-    IEnumerator EnLarge()
+    IEnumerator EnLarge(Node node)
     {
+        Text eraText = eraTexts[node.myIndex];
+        eraText.color = new Color(255f, 255f, 255f, 255f);
+        float theta = 90f / 11f;
         while (nodeIndicater.transform.localScale.x < largeScale_Max)
         {
             nodeIndicater.transform.localScale *= largeScale;
+            eraText.transform.Rotate(-theta, 0, 0);
             yield return null;
         }
         nodeIndicater.transform.localScale = Vector3.one * largeScale_Max;
@@ -332,6 +346,7 @@ public class MainManager : MonoBehaviour
 
     IEnumerator DecideEffectGo(Node node)
     {
+        decideEffectTargetNode = node.transform.gameObject;
         Utility.Alignment(decideEffect.transform, node.transform);
         decideEffect.SetActive(true);
         while (decideEffect.transform.localScale.x < 2f)
@@ -400,7 +415,7 @@ public class MainManager : MonoBehaviour
                 //決定のSEを流す
                 audio_SE.PlayOneShot(select);
                 Utility.ChangeObjColor(_3dStartButton, Color.green);
-                Invoke("InvisibleButton", 1);
+                Invoke("InvisibleStartButton", 1);
                 nodeIndicater.SetActive(true);
                 //ノードインディケーターを初期位置まで移動
                 StartCoroutine(ActiveNextNode(nodes[0], nodes[0], plane_UI));
@@ -460,6 +475,8 @@ public class MainManager : MonoBehaviour
         nodeSelectEffect.SetActive(true);
         //インディケーターは非アクティブ化
         nodeIndicater.SetActive(false);
+        //イニシャライズボタンのアクティブ化
+        _3dRebootButton.SetActive(true);
         //アップデートモードの変更
         stateProcessor.SetState(ST_FreeChoice);
         //タグを変える
@@ -467,15 +484,17 @@ public class MainManager : MonoBehaviour
             nodes[i].transform.tag = "FreeChoiceNode";
     }
 
-    public void InvisibleButton()
+    public void InvisibleStartButton()
     {
         Utility.ChangeObjColor(_3dStartButton, Color.white);
+        indicater.gameObject.SetActive(true);
         _3dStartButton.SetActive(false);
     }
 
     public void InitRebootButtonColor()
     {
         Utility.ChangeObjColor(_3dRebootButton, Color.white);
+        _3dRebootButton.SetActive(false);
     }
     #endregion
 }
