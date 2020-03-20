@@ -349,13 +349,13 @@ public class MainManager : MonoBehaviour
         decideEffectTargetNode = node.transform.gameObject;
         Utility.Alignment(decideEffect.transform, node.transform);
         decideEffect.SetActive(true);
-        while (decideEffect.transform.localScale.x < 2f)
+        while (decideEffect.transform.localScale.x < 3000f)
         {
             decideEffect.transform.localScale *= 1.1f;
             yield return null;
         }
         decideEffect.SetActive(false);
-        decideEffect.transform.localScale = Vector3.one * 0.02f;
+        decideEffect.transform.localScale = Vector3.one * 30f;
 
     }
     #endregion
