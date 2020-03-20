@@ -131,6 +131,7 @@ namespace MagicLeap
             {
                 // Demonstrate haptics using callbacks.
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.Medium);
+                mainManager.ML_OnBumperButton();
             }
         }
 

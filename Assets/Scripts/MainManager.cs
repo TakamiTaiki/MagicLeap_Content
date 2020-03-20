@@ -29,6 +29,8 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] GameObject decideEffect;
 
+    [SerializeField] GameObject dissolveBuilding;
+
     private GameObject decideEffectTargetNode;
     private GameObject freeChoiceTargetNode;
 
@@ -218,7 +220,7 @@ public class MainManager : MonoBehaviour
     {
         Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
-        yield return PanelLiftDown(node, 0.2f);
+        yield return PanelLiftDown(node, 0.15f);
         if (!isFreeChoice) UpdateNode();
     }
     #endregion
@@ -231,7 +233,7 @@ public class MainManager : MonoBehaviour
         UpdateAudioAndUI(node);
         //着火
         node.assets[0].SetActive(true);
-        yield return PanelLiftUp(node, 0.2f);
+        yield return PanelLiftUp(node, 0.15f);
         //鎮火
         node.assets[0].SetActive(false);
         //城の非アクティブ化
@@ -247,7 +249,7 @@ public class MainManager : MonoBehaviour
     {
         Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
-        yield return PanelLiftUp(node, 0.2f);
+        yield return PanelLiftUp(node, 0.15f);
         if (!isFreeChoice) UpdateNode();
     }
     #endregion
@@ -272,7 +274,7 @@ public class MainManager : MonoBehaviour
     {
         Utility.SetStage(node.era, castles, planes);
         UpdateAudioAndUI(node);
-        yield return PanelLiftUp(node, 0.2f);
+        yield return PanelLiftUp(node, 0.15f);
         if (!isFreeChoice) UpdateNode();
     }
     #endregion
@@ -495,6 +497,11 @@ public class MainManager : MonoBehaviour
     {
         Utility.ChangeObjColor(_3dRebootButton, Color.white);
         _3dRebootButton.SetActive(false);
+    }
+
+    public void ML_OnBumperButton()
+    {
+        dissolveBuilding.transform.Translate(0, -0.01f, 0);
     }
     #endregion
 }
