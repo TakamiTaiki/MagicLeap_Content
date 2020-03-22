@@ -20,26 +20,24 @@ namespace MagicLeap
     /// This class provides examples of how you can use haptics and LEDs
     /// on the Control.
     /// </summary>
-    [RequireComponent(typeof(ControllerConnectionHandler))]
     public class ControllerFeedbackExample : MonoBehaviour
     {
         #region Private Variables
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        protected ControllerConnectionHandler _controllerConnectionHandler;
 
-        private int _lastLEDindex = -1;
+        protected int _lastLEDindex = -1;
         #endregion
 
         #region Const Variables
-        private const float TRIGGER_DOWN_MIN_VALUE = 0.2f;
+        protected const float TRIGGER_DOWN_MIN_VALUE = 0.2f;
 
         // UpdateLED - Constants
-        private const float HALF_HOUR_IN_DEGREES = 15.0f;
-        private const float DEGREES_PER_HOUR = 12.0f / 360.0f;
+        protected const float HALF_HOUR_IN_DEGREES = 15.0f;
+        protected const float DEGREES_PER_HOUR = 12.0f / 360.0f;
 
-        private const int MIN_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock12);
-        private const int MAX_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock6And12);
-        private const int LED_INDEX_DELTA = MAX_LED_INDEX - MIN_LED_INDEX;
-        private MainManager mainManager;
+        protected const int MIN_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock12);
+        protected const int MAX_LED_INDEX = (int)(MLInputControllerFeedbackPatternLED.Clock6And12);
+        protected const int LED_INDEX_DELTA = MAX_LED_INDEX - MIN_LED_INDEX;
         #endregion
 
         #region Unity Methods
@@ -48,12 +46,9 @@ namespace MagicLeap
         /// </summary>
         void Start()
         {
-            _controllerConnectionHandler = GetComponent<ControllerConnectionHandler>();
-
             MLInput.OnControllerButtonUp += HandleOnButtonUp;
             MLInput.OnControllerButtonDown += HandleOnButtonDown;
             MLInput.OnTriggerDown += HandleOnTriggerDown;
-            mainManager = FindObjectOfType<MainManager>();
         }
 
         /// <summary>
@@ -67,7 +62,7 @@ namespace MagicLeap
         /// <summary>
         /// Stop input api and unregister callbacks.
         /// </summary>
-        void OnDestroy()
+        public void OnDestroy()
         {
             MLInput.OnTriggerDown -= HandleOnTriggerDown;
             MLInput.OnControllerButtonDown -= HandleOnButtonDown;
@@ -79,7 +74,7 @@ namespace MagicLeap
         /// <summary>
         /// Updates LED on the physical controller based on touch pad input.
         /// </summary>
-        private void UpdateLED()
+        public virtual void UpdateLED()
         {
             if (!_controllerConnectionHandler.IsControllerValid())
             {
@@ -123,7 +118,7 @@ namespace MagicLeap
         /// </summary>
         /// <param name="controller_id">The id of the controller.</param>
         /// <param name="button">The button that is being pressed.</param>
-        private void HandleOnButtonDown(byte controllerId, MLInputControllerButton button)
+        public virtual void HandleOnButtonDown(byte controllerId, MLInputControllerButton button)
         {
             MLInputController controller = _controllerConnectionHandler.ConnectedController;
             if (controller != null && controller.Id == controllerId &&
@@ -131,7 +126,6 @@ namespace MagicLeap
             {
                 // Demonstrate haptics using callbacks.
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.ForceDown, MLInputControllerFeedbackIntensity.Medium);
-                mainManager.ML_OnBumperButton();
             }
         }
 
@@ -140,7 +134,7 @@ namespace MagicLeap
         /// </summary>
         /// <param name="controller_id">The id of the controller.</param>
         /// <param name="button">The button that is being released.</param>
-        private void HandleOnButtonUp(byte controllerId, MLInputControllerButton button)
+        public virtual void HandleOnButtonUp(byte controllerId, MLInputControllerButton button)
         {
             MLInputController controller = _controllerConnectionHandler.ConnectedController;
             if (controller != null && controller.Id == controllerId &&
@@ -156,14 +150,13 @@ namespace MagicLeap
         /// </summary>
         /// <param name="controller_id">The id of the controller.</param>
         /// <param name="value">The value of the trigger button.</param>
-        private void HandleOnTriggerDown(byte controllerId, float value)
+        public virtual void HandleOnTriggerDown(byte controllerId, float value)
         {
             MLInputController controller = _controllerConnectionHandler.ConnectedController;
             if (controller != null && controller.Id == controllerId)
             {
                 MLInputControllerFeedbackIntensity intensity = (MLInputControllerFeedbackIntensity)((int)(value * 2.0f));
                 controller.StartFeedbackPatternVibe(MLInputControllerFeedbackPatternVibe.Buzz, intensity);
-                mainManager.ML_OnTriggerDown();
             }
         }
         #endregion

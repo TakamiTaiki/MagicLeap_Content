@@ -7,11 +7,6 @@ public class UILookUser : MonoBehaviour
     [SerializeField] GameObject target;
     [SerializeField] GameObject center;
     [SerializeField] Transform ui;
-
-    private void Start()
-    {
-        Debug.Log(transform.position);
-    }
     void Update()
     {
         Vector3 aim = target.transform.position - ui.position;

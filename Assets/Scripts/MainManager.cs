@@ -100,8 +100,8 @@ public class MainManager : MonoBehaviour
     #region イニシャライズ
     public void Init()
     {
-        //ノードが時系列になるようにソート
-        Array.Sort(nodes, (a, b) => a.era - b.era);
+        //ノードが時系列になるようにソート => 今回はいらない
+        //Array.Sort(nodes, (a, b) => a.era - b.era);
         //タグと索引の初期化
         for (int i = 0; i < nodes.Length; i++)
         {
@@ -115,24 +115,17 @@ public class MainManager : MonoBehaviour
         currentNode = nodes[0];
 
         //パネルUIのイニシャライズ
-        PanelInit();
+        Utility.Alignment(plane_UI, planeStart);
         //初期舞台セット
         Utility.SetStage(currentNode.era, castles, planes);
 
         explainText.text = "";
-        indicater.gameObject.SetActive(false);
         _3dStartButton.SetActive(true);
-        //_3dRebootButton.SetActive(false);
+        indicater.gameObject.SetActive(false);
         nodeIndicater.SetActive(false);
         nodeSelectEffect.SetActive(false);
         //初期コンテンツを開始
         stateProcessor.SetState(ST_Start);
-    }
-    public void PanelInit()
-    {
-        //パネルUIの位置の初期化
-        //plane_UI.localPosition = new Vector3(-0.8f, -0.182f, 0.538f);
-        Utility.Alignment(plane_UI, planeStart);
     }
     #endregion
 
@@ -144,8 +137,6 @@ public class MainManager : MonoBehaviour
     void Update()
     {
         stateProcessor.Update();
-        //説明の赤印の回転
-        indicater.Rotate(new Vector3(2f, 0, 0));
     }
 
     #region スタートステート
@@ -159,6 +150,7 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
+            //他に何かあれば
             stateProcessor.SetState(ST_Play);
         }
     }
@@ -175,6 +167,8 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
+            //説明の赤印の回転
+            indicater.Rotate(new Vector3(2f, 0, 0));
             Utility.Alignment(decideEffect, decideEffectTargetNode);
         }
     }
@@ -191,23 +185,22 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
+            //説明の赤印の回転
+            indicater.Rotate(new Vector3(2f, 0, 0));
             Utility.Alignment(nodeSelectEffect, freeChoiceTargetNode);
             //Rayはコントローラの先端から照射
             Ray ray = new Ray(controllerTip.position, controllerTip.forward);
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo, distance))
             {
-                string tag = hitInfo.collider.tag;
+                GameObject hitObj = hitInfo.collider.gameObject;
 
-                if (tag == "FreeChoiceNode")
+                if (hitObj.tag == "FreeChoiceNode" && freeChoiceTargetNode.name != hitObj.name)
                 {
-                    if (freeChoiceTargetNode.name != hitInfo.collider.gameObject.name)
-                    {
-                        freeChoiceTargetNode = hitInfo.collider.gameObject;
-                        Utility.ChangeObjColor(nodeSelectEffect, Color.white);
-                        audio_SE.PlayOneShot(preselect);
-                        explainText.text = nodes[nodeDictionary[freeChoiceTargetNode.name]].explain;
-                    }
+                    freeChoiceTargetNode = hitObj;
+                    Utility.ChangeObjColor(nodeSelectEffect, Color.white);
+                    audio_SE.PlayOneShot(preselect);
+                    explainText.text = nodes[nodeDictionary[freeChoiceTargetNode.name]].explain;
                 }
             }
         }
@@ -360,6 +353,12 @@ public class MainManager : MonoBehaviour
         decideEffect.transform.localScale = Vector3.one * 30f;
 
     }
+    IEnumerator InvisibleUIButton(GameObject button, Color color)
+    {
+        yield return new WaitForSeconds(1f);
+        Utility.ChangeObjColor(button, color);
+        button.SetActive(false);
+    }
     #endregion
 
     #region コントローラ関連
@@ -377,21 +376,14 @@ public class MainManager : MonoBehaviour
 
             if (tag == "NextWaitNode")
             {
+                indicater.gameObject.SetActive(true);
                 //決定のSEを流す
                 audio_SE.PlayOneShot(select);
                 //各ノードに割り振られた処理を開始
                 currentNode.process.Invoke();
-                //ノードを変えることによる選択できないようにする
+                //タグを変えることによる選択できないようにする
                 currentNode.transform.tag = "ActiveNode";
                 StartCoroutine(DecideEffectGo(currentNode));
-            }
-            else if (tag == "ActiveNode")
-            {
-                //何かしらの処理があれば
-            }
-            else if (tag == "InActiveNode")
-            {
-                //何かしらの処理があれば
             }
             else if (tag == "FreeChoiceNode")
             {
@@ -408,7 +400,7 @@ public class MainManager : MonoBehaviour
                 //決定のSEを流す
                 audio_SE.PlayOneShot(select);
                 Utility.ChangeObjColor(_3dRebootButton, Color.green);
-                Invoke("InitRebootButtonColor", 1);
+                StartCoroutine(InvisibleUIButton(_3dRebootButton, Color.white));
                 audio_Voice.PlayOneShot(initVoice);
                 Init();
             }
@@ -417,7 +409,7 @@ public class MainManager : MonoBehaviour
                 //決定のSEを流す
                 audio_SE.PlayOneShot(select);
                 Utility.ChangeObjColor(_3dStartButton, Color.green);
-                Invoke("InvisibleStartButton", 1);
+                StartCoroutine(InvisibleUIButton(_3dStartButton, Color.white));
                 nodeIndicater.SetActive(true);
                 //ノードインディケーターを初期位置まで移動
                 StartCoroutine(ActiveNextNode(nodes[0], nodes[0], plane_UI));
@@ -425,6 +417,10 @@ public class MainManager : MonoBehaviour
                 stateProcessor.SetState(ST_Play);
             }
         }
+    }
+    public void ML_OnBumperButton()
+    {
+        dissolveBuilding.transform.Translate(0, -0.01f, 0);
     }
     #endregion
 
@@ -484,24 +480,6 @@ public class MainManager : MonoBehaviour
         //タグを変える
         for (int i = 0; i < nodes.Length; i++)
             nodes[i].transform.tag = "FreeChoiceNode";
-    }
-
-    public void InvisibleStartButton()
-    {
-        Utility.ChangeObjColor(_3dStartButton, Color.white);
-        indicater.gameObject.SetActive(true);
-        _3dStartButton.SetActive(false);
-    }
-
-    public void InitRebootButtonColor()
-    {
-        Utility.ChangeObjColor(_3dRebootButton, Color.white);
-        _3dRebootButton.SetActive(false);
-    }
-
-    public void ML_OnBumperButton()
-    {
-        dissolveBuilding.transform.Translate(0, -0.01f, 0);
     }
     #endregion
 }
