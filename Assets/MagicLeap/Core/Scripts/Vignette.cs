@@ -26,7 +26,7 @@ namespace UnityEngine.XR.MagicLeap
 
         #region Private Variables
         [SerializeField, Tooltip("The power to use for the vignette intensity.")]
-        private float _vignettePower = 10.0f;
+        private float _vignettePower = 6f;
 
         [SerializeField, Tooltip("A reference to the vignette material.")]
         private Material _vignetteMaterial = null;
@@ -34,8 +34,8 @@ namespace UnityEngine.XR.MagicLeap
         private float _defaultVigettePower;
         private int _vignetteState = (int)State.ON;
 
-        private const float VIGNETTE_MIN = 1.0f;
-        private const float VIGNETTE_MAX = 20.0f;
+        public float VIGNETTE_MIN = 1.0f;
+        public float VIGNETTE_MAX = 20.0f;
         #endregion
 
         #region Public Properties
