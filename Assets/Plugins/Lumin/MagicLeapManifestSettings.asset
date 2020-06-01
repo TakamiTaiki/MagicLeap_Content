@@ -90,3 +90,15 @@ MonoBehaviour:
     enabled: 0
   - name: FineLocation
     enabled: 0
+  - name: ConnectionAccess
+    enabled: 0
+  - name: DesktopCompanion
+    enabled: 0
+  - name: Expressions
+    enabled: 0
+  - name: ObjectData
+    enabled: 0
+  - name: ConnectionAudioCaptureStreaming
+    enabled: 0
+  - name: ConnectionVideoCaptureStreaming
+    enabled: 0

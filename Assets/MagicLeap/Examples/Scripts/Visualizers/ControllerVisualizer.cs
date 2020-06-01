@@ -49,9 +49,6 @@ namespace MagicLeap
         [SerializeField, Tooltip("The controller's bumper button model.")]
         private GameObject _bumperButton = null;
 
-        [SerializeField, Tooltip("The Game Object showing the touch model on the touchpad")]
-        private Transform _touchIndicatorTransform = null;
-
         // Color when the button state is idle.
         private Color _defaultColor = Color.white;
         // Color when the button state is active.
@@ -108,17 +105,8 @@ namespace MagicLeap
                 enabled = false;
                 return;
             }
-            if (!_touchIndicatorTransform)
-            {
-                Debug.LogError("Error: ControllerVisualizer._touchIndicatorTransform is not set, disabling script.");
-                enabled = false;
-                return;
-            }
 
             SetVisibility(_controllerConnectionHandler.IsControllerValid());
-
-            MLInput.OnControllerButtonUp += HandleOnButtonUp;
-            MLInput.OnControllerButtonDown += HandleOnButtonDown;
 
             _triggerMaterial = FindMaterial(_trigger);
             _touchpadMaterial = FindMaterial(_touchpad);
@@ -140,29 +128,10 @@ namespace MagicLeap
             SetVisibility(_controllerConnectionHandler.IsControllerValid());
         }
 
-        /// <summary>
-        /// Stop input api and unregister callbacks.
-        /// </summary>
-        void OnDestroy()
-        {
-            MLInput.OnControllerButtonDown -= HandleOnButtonDown;
-            MLInput.OnControllerButtonUp -= HandleOnButtonUp;
-        }
         #endregion
 
         #region Private Methods
-        /// <summary>
-        /// Sets the visual pressure indicator for the appropriate button MeshRenderers.
-        /// <param name="renderer">The meshrenderer to modify.</param>
-        /// <param name="pressure">The pressure sensitivy interpolant for the meshrendere.r</param>
-        /// </summary>
-        private void SetPressure(MeshRenderer renderer, float pressure)
-        {
-            if (renderer.material.HasProperty("_Cutoff"))
-            {
-                renderer.material.SetFloat("_Cutoff", pressure);
-            }
-        }
+
 
         /// <summary>
         /// Update the touchpad's indicator: (location, directions, color).
@@ -176,19 +145,6 @@ namespace MagicLeap
             }
             MLInputController controller = _controllerConnectionHandler.ConnectedController;
             Vector3 updatePosition = new Vector3(controller.Touch1PosAndForce.x, 0.0f, controller.Touch1PosAndForce.y);
-            float touchY = _touchIndicatorTransform.localPosition.y;
-            _touchIndicatorTransform.localPosition = new Vector3(updatePosition.x * _touchpadRadius / MagicLeapDevice.WorldScale, touchY, updatePosition.z * _touchpadRadius / MagicLeapDevice.WorldScale);
-
-            if (controller.Touch1Active)
-            {
-                _touchIndicatorTransform.gameObject.SetActive(true);
-                float angle = Mathf.Atan2(controller.Touch1PosAndForce.x, controller.Touch1PosAndForce.y);
-                _touchIndicatorTransform.localRotation = Quaternion.Euler(0, angle * Mathf.Rad2Deg, 0);
-            }
-            else
-            {
-                _touchIndicatorTransform.gameObject.SetActive(false);
-            }
 
             float force = controller.Touch1PosAndForce.z;
             _touchpadMaterial.color = Color.Lerp(_defaultColor, _activeColor, force);
@@ -226,27 +182,6 @@ namespace MagicLeap
         }
 
         /// <summary>
-        /// Sets the color of all Materials.
-        /// </summary>
-        /// <param name="color">The color to be applied to the materials.</param>
-        private void SetAllMaterialColors(Color color)
-        {
-            _triggerMaterial.color = color;
-            _touchpadMaterial.color = color;
-            _homeButtonMaterial.color = color;
-            _bumperButtonMaterial.color = color;
-        }
-
-        /// <summary>
-        /// Coroutine to reset the home color back to the original color.
-        /// </summary>
-        private IEnumerator RestoreHomeColor()
-        {
-            yield return new WaitForSeconds(0.5f);
-            _homeButtonMaterial.color = _defaultColor;
-        }
-
-        /// <summary>
         /// Set object visibility to value.
         /// </summary>
         /// <param name="value"> true or false to set visibility. </param>
@@ -264,50 +199,6 @@ namespace MagicLeap
             }
 
             _wasControllerValid = value;
-        }
-        #endregion
-
-        #region Event Handlers
-        /// <summary>
-        /// Handles the event for button down.
-        /// </summary>
-        /// <param name="controllerId">The id of the controller.</param>
-        /// <param name="button">The button that is being pressed.</param>
-        private void HandleOnButtonDown(byte controllerId, MLInputControllerButton button)
-        {
-            if (_controllerConnectionHandler.IsControllerValid() && _controllerConnectionHandler.ConnectedController.Id == controllerId &&
-                button == MLInputControllerButton.Bumper)
-            {
-                // Sets the color of the Bumper to the active color.
-                _bumperButtonMaterial.color = _activeColor;
-            }
-        }
-
-        /// <summary>
-        /// Handles the event for button up.
-        /// </summary>
-        /// <param name="controllerId">The id of the controller.</param>
-        /// <param name="button">The button that is being released.</param>
-        private void HandleOnButtonUp(byte controllerId, MLInputControllerButton button)
-        {
-            if (_controllerConnectionHandler.IsControllerValid() && _controllerConnectionHandler.ConnectedController.Id == controllerId)
-            {
-                if (button == MLInputControllerButton.Bumper)
-                {
-                    // Sets the color of the Bumper to the default color.
-                    _bumperButtonMaterial.color = _defaultColor;
-                }
-
-                else if (button == MLInputControllerButton.HomeTap)
-                {
-                    // Note: HomeTap is NOT a button. It's a physical button on the controller.
-                    // But in the application side, the tap registers as a ButtonUp event and there is NO
-                    // ButtonDown equivalent. We cannot detect holding down the Home (button). The OS will
-                    // handle it as either a return to the icon grid or turning off the controller.
-                    _homeButtonMaterial.color = _activeColor;
-                    StartCoroutine(RestoreHomeColor());
-                }
-            }
         }
         #endregion
     }

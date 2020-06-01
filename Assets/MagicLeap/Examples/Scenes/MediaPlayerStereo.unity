@@ -212,36 +212,6 @@ MeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 566433908}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &471241016
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 471241017}
-  m_Layer: 0
-  m_Name: Takami
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &471241017
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471241016}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &566433908
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1151,7 +1121,6 @@ MonoBehaviour:
   _touchpad: {fileID: 1886599689}
   _homeButton: {fileID: 1886599690}
   _bumperButton: {fileID: 1886599691}
-  _touchIndicatorTransform: {fileID: 1886599688}
 --- !u!114 &1178202010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1688,12 +1657,6 @@ Transform:
 --- !u!1 &1886599687 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1277092664057374, guid: 6884f69ad0adbb441905ff499f5d1ece,
-    type: 3}
-  m_PrefabInstance: {fileID: 1886599685}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1886599688 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4810828765201934, guid: 6884f69ad0adbb441905ff499f5d1ece,
     type: 3}
   m_PrefabInstance: {fileID: 1886599685}
   m_PrefabAsset: {fileID: 0}
